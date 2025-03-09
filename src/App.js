@@ -7,14 +7,25 @@ function App() {
     async function enableVideo() {
       try {
         // Request webcam access
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } }});
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { exact: "environment" } },
+        });
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
-          // Autoplay the video
           videoRef.current.play();
         }
       } catch (err) {
-        console.error("Error accessing webcam:", err);
+        //default camera not there, try another
+        try {
+          // Fallback to any camera
+          const fallbackStream = await navigator.mediaDevices.getUserMedia({ video: true });
+          if (videoRef.current) {
+            videoRef.current.srcObject = fallbackStream;
+            videoRef.current.play();
+          }
+        } catch (fallbackErr) {
+          console.error("Error accessing webcam:", err);
+        }
       }
     }
     enableVideo();
