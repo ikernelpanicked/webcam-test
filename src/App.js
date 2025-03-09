@@ -7,7 +7,7 @@ function App() {
     async function enableVideo() {
       try {
         // Request webcam access
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } }});
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           // Autoplay the video
@@ -25,6 +25,9 @@ function App() {
       <h1>Webcam Test</h1>
       <video
         ref={videoRef}
+        playsInline
+        autoPlay
+        muted
         style={{ width: 640, height: 480, background: "#000" }}
       />
     </div>
