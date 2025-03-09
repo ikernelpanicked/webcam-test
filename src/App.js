@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useRef } from "react";
 
 function App() {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    async function enableVideo() {
+      try {
+        // Request webcam access
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          // Autoplay the video
+          videoRef.current.play();
+        }
+      } catch (err) {
+        console.error("Error accessing webcam:", err);
+      }
+    }
+    enableVideo();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ textAlign: "center", marginTop: 50 }}>
+      <h1>Webcam Test</h1>
+      <video
+        ref={videoRef}
+        style={{ width: 640, height: 480, background: "#000" }}
+      />
     </div>
   );
 }
